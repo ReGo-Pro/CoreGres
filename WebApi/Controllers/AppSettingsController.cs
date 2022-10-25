@@ -14,7 +14,14 @@ namespace webapi.Controllers {
 
         [HttpGet("")]
         public IActionResult GetAllSettings() {
-            return Ok(_uow.AppSettingsRepository.FindAll().Select(s => s.ToDto()));
+            try {
+                return Ok(_uow.AppSettingsRepository.FindAll().Select(s => s.ToDto()));
+            }
+            catch (Exception e) {
+                // TODO: Log exception
+                return InternalServerError();
+            }
+            
         }
 
         [HttpGet("{key}", Name = "GetSetting")]
@@ -23,13 +30,19 @@ namespace webapi.Controllers {
                 return BadRequest();
             }
 
-            var result = _uow.AppSettingsRepository.GetByKey(key);
-            
-            if (result == null) {
-                return NotFound();
-            }
+            try {
+                var result = _uow.AppSettingsRepository.GetByKey(key);
 
-            return Ok(result.ToDto());
+                if (result == null) {
+                    return NotFound();
+                }
+
+                return Ok(result.ToDto());
+            }
+            catch (Exception e) {
+                // TODO: log exception
+                return InternalServerError();
+            }
         }
 
         [HttpPost("")]
@@ -37,7 +50,13 @@ namespace webapi.Controllers {
             if (dto == null || !ModelState.IsValid) {
                 return BadRequest();
             }
-            return savePostedSetting(dto);
+            try {
+                return savePostedSetting(dto);
+            }
+            catch (Exception e) {
+                // TODO: log exception
+                return InternalServerError();
+            }
         }
 
         private IActionResult savePostedSetting(AppSettingCreationViewModel dto) {
