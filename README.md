@@ -1,5 +1,5 @@
 # CoreGres
-A dockerized ASP.NET Core API application that uses postgress datastore
+A dockerized ASP.NET Core API application that uses postgress datastore. 
 This is a list of features in this application:
 1. Use of PostgreSQL datastore
 2. Connecting to PostgreSQL using EF Core
