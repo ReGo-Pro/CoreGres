@@ -12,6 +12,17 @@ namespace data {
             modelBuilder.ApplyConfiguration(new AppSettingEntityConfiguration());
         }
 
+        // TODO: Think about this (where should it be?)
+        public static void ApplyMigrations(string connectionString) {
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new();
+            optionsBuilder.UseNpgsql(connectionString);
+            using (var context = new AppDbContext(optionsBuilder.Options)) {
+                if (context.Database.GetPendingMigrations().Any()) {
+                    context.Database.Migrate();
+                }
+            }
+        }
+
         public DbSet<AppSetting> AppSettings { get; set; }
     }
 }

@@ -7,9 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var dbConnex = builder.Configuration.GetConnectionString("AppDbConnex");
 builder.Services.AddDbContext<AppDbContext>(opt => {
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("AppDbConnex"));
+    opt.UseNpgsql(dbConnex);
 });
+AppDbContext.ApplyMigrations(dbConnex);
+
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
