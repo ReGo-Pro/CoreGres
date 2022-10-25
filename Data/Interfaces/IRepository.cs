@@ -13,5 +13,7 @@ namespace data.Interfaces {
         void RemoveRange(IEnumerable<TEntity> entities);
 
         TEntity FindById(TIdentifier ID);
+
+        IEnumerable<TEntity> FindAll();
     }
 }

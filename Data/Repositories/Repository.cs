@@ -34,6 +34,10 @@ namespace data.Repositories {
             _context.RemoveRange(entities);
         }
 
+        public IEnumerable<TEntity> FindAll() {
+            return _context.Set<TEntity>().ToList();
+        }
+
         protected virtual DbContext Context => _context;
     }
 }
