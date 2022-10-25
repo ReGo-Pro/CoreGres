@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="microsoft.entityframeworkcore" Version="6.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.10" />
     <PackageReference Include="microsoft.entityframeworkcore.tools" Version="6.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
