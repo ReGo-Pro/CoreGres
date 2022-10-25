@@ -1,0 +1,18 @@
+services:
+  database:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=CoreGresDb
+
+  backend:
+    build: .
+    ports:
+      - 8080:80
+      - 8081:443
+    depends_on:
+      - database
+    command: ["./wait-for-postgres.sh", "database", "dotnet", "WebApp.dll"]
