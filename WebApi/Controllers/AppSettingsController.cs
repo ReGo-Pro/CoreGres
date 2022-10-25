@@ -24,13 +24,13 @@ namespace webapi.Controllers {
         }
 
         [HttpGet("{key}", Name = "GetSetting")]
-        public IActionResult GetSetting(string key) {
+        public async Task<IActionResult> GetSetting(string key) {
             if (string.IsNullOrEmpty(key)) {
                 return BadRequest();
             }
 
             try {
-                var result = _uow.AppSettingsRepository.GetByKey(key);
+                var result = await _uow.AppSettingsRepository.GetByKeyAsync(key);
 
                 if (result == null) {
                     return NotFound();

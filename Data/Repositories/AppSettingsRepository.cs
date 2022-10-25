@@ -11,9 +11,9 @@ namespace data.Repositories {
     public class AppSettingsRepository : Repository<AppSetting, int>, IAppSettingsRepository {
         public AppSettingsRepository(AppDbContext context) : base(context) { }
 
-        public AppSetting? GetByKey(string key) {
+        public async Task<AppSetting?> GetByKeyAsync(string key) {
             // TODO: we need a more consistent comparison here
-            return Context.AppSettings.SingleOrDefault(s => s.Key == key);
+            return await Context.AppSettings.SingleOrDefaultAsync(s => s.Key == key);
         }
 
         protected override AppDbContext Context => base.Context as AppDbContext;
