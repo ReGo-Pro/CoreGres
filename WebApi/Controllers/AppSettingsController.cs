@@ -2,6 +2,7 @@
 using Domain.Core;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Mappers;
+using webapi.ViewModels.AppSettings;
 
 namespace webapi.Controllers {
     public class AppSettingsController : ApiController {
@@ -16,7 +17,7 @@ namespace webapi.Controllers {
             return Ok(_uow.AppSettingsRepository.FindAll().Select(s => s.ToDto()));
         }
 
-        [HttpGet("{key}")]
+        [HttpGet("{key}", Name = "GetSetting")]
         public IActionResult GetSetting(string key) {
             if (string.IsNullOrEmpty(key)) {
                 return BadRequest();
@@ -29,6 +30,22 @@ namespace webapi.Controllers {
             }
 
             return Ok(result.ToDto());
+        }
+
+        [HttpPost("")]
+        public IActionResult CreateNewAppSetting(AppSettingCreationViewModel dto) {
+            if (dto == null || !ModelState.IsValid) {
+                return BadRequest();
+            }
+            return savePostedSetting(dto);
+        }
+
+        private IActionResult savePostedSetting(AppSettingCreationViewModel dto) {
+            var appSetting = dto.ToModel();
+            _uow.AppSettingsRepository.Add(appSetting);
+            _uow.Complete();
+            // TODO: we get an exception here. See what's that all about
+            return CreatedAtRoute("GetSetting", new { key = dto.Key }, appSetting);
         }
     }
 }
