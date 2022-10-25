@@ -12,7 +12,7 @@ var dbConnex = builder.Configuration.GetConnectionString("AppDbConnex");
 builder.Services.AddDbContext<AppDbContext>(opt => {
     opt.UseNpgsql(dbConnex);
 });
-AppDbContext.ApplyMigrations(dbConnex);
+await AppDbContext.ApplyMigrationsAsync(dbConnex);
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 

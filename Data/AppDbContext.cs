@@ -13,12 +13,12 @@ namespace data {
         }
 
         // TODO: Think about this (where should it be?)
-        public static void ApplyMigrations(string connectionString) {
+        public static async Task ApplyMigrationsAsync(string connectionString) {
             DbContextOptionsBuilder<AppDbContext> optionsBuilder = new();
             optionsBuilder.UseNpgsql(connectionString);
             using (var context = new AppDbContext(optionsBuilder.Options)) {
-                if (context.Database.GetPendingMigrations().Any()) {
-                    context.Database.Migrate();
+                if ((await context.Database.GetPendingMigrationsAsync()).Any()) {
+                    await context.Database.MigrateAsync();
                 }
             }
         }
