@@ -14,6 +14,6 @@ namespace data.Interfaces {
 
         TEntity FindById(TIdentifier ID);
 
-        IEnumerable<TEntity> FindAll();
+        Task<IEnumerable<TEntity>> FindAllAsync();
     }
 }

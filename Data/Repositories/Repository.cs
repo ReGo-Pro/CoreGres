@@ -34,8 +34,8 @@ namespace data.Repositories {
             _context.RemoveRange(entities);
         }
 
-        public IEnumerable<TEntity> FindAll() {
-            return _context.Set<TEntity>().ToList();
+        public async Task<IEnumerable<TEntity>> FindAllAsync() {
+            return await _context.Set<TEntity>().ToListAsync();
         }
 
         protected virtual DbContext Context => _context;

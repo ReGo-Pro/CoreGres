@@ -13,15 +13,14 @@ namespace webapi.Controllers {
         }
 
         [HttpGet("")]
-        public IActionResult GetAllSettings() {
+        public async Task<IActionResult> GetAllSettings() {
             try {
-                return Ok(_uow.AppSettingsRepository.FindAll().Select(s => s.ToDto()));
+                return Ok((await _uow.AppSettingsRepository.FindAllAsync()).Select(s => s.ToDto()));
             }
             catch (Exception e) {
                 // TODO: Log exception
                 return InternalServerError();
             }
-            
         }
 
         [HttpGet("{key}", Name = "GetSetting")]
