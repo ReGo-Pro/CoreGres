@@ -12,8 +12,8 @@ namespace data {
             AppSettingsRepository = new AppSettingsRepository(DbContext);
         }
 
-        public void Complete() {
-            _context.SaveChanges();
+        public async Task CompleteAsync() {
+            await _context.SaveChangesAsync();
         }
     }
 }

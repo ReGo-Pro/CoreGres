@@ -45,12 +45,12 @@ namespace webapi.Controllers {
         }
 
         [HttpPost("")]
-        public IActionResult CreateNewAppSetting(AppSettingCreationViewModel dto) {
+        public async Task<IActionResult> CreateNewAppSetting(AppSettingCreationViewModel dto) {
             if (dto == null || !ModelState.IsValid) {
                 return BadRequest();
             }
             try {
-                return savePostedSetting(dto);
+                return await savePostedSetting(dto);
             }
             catch (Exception e) {
                 // TODO: log exception
@@ -58,10 +58,10 @@ namespace webapi.Controllers {
             }
         }
 
-        private IActionResult savePostedSetting(AppSettingCreationViewModel dto) {
+        private async Task<IActionResult> savePostedSetting(AppSettingCreationViewModel dto) {
             var appSetting = dto.ToModel();
             _uow.AppSettingsRepository.Add(appSetting);
-            _uow.Complete();
+            await _uow.CompleteAsync();
             // TODO: we get an exception here. See what's that all about
             return CreatedAtRoute("GetSetting", new { key = dto.Key }, appSetting);
         }
