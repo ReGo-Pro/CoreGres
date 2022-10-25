@@ -7,18 +7,19 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["webapi/webapi.csproj", "webapi/"]
+COPY ["WebApi/WebApi.csproj", "WebApi/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["data/data.csproj", "data/"]
-RUN dotnet restore "webapi/webapi.csproj"
+COPY ["Data/Data.csproj", "Data/"]
+RUN dotnet restore "WebApi/WebApi.csproj"
 COPY . .
-WORKDIR "/src/webapi"
-RUN dotnet build "webapi.csproj" -c Release -o /app/build
+WORKDIR "/src/WebApi"
+RUN dotnet build "WebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "webapi.csproj" -c Release -o /app/publish
+RUN dotnet publish "WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+COPY ./wait-for-postgres.sh .
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "webapi.dll"]
+ENTRYPOINT ["dotnet", "WebApi.dll"]
