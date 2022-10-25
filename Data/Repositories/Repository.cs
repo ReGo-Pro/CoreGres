@@ -17,8 +17,8 @@ namespace data.Repositories {
             _context.AddRange(entities);
         }
 
-        public TEntity FindById(TIdentifier ID) {
-            var entity = _context.Find(typeof(TEntity), ID);
+        public async Task<TEntity> FindByIdAsync(TIdentifier ID) {
+            var entity = await _context.FindAsync(typeof(TEntity), ID);
             if (entity == null) {
                 return null;
             }

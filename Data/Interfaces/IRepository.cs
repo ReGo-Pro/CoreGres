@@ -12,7 +12,7 @@ namespace data.Interfaces {
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
 
-        TEntity FindById(TIdentifier ID);
+        Task<TEntity> FindByIdAsync(TIdentifier ID);
 
         Task<IEnumerable<TEntity>> FindAllAsync();
     }
