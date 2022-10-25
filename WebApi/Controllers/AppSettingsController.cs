@@ -1,17 +1,19 @@
-﻿using Domain.Core;
+﻿using data.Interfaces;
+using Domain.Core;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Mappers;
 
 namespace webapi.Controllers {
     public class AppSettingsController : ApiController {
-        List<AppSetting> settings = new List<AppSetting>() {
-            new AppSetting() { ID = 1, Key = "Owner", Value = "ReGo"},
-            new AppSetting() { ID = 2, Key = "IsDefault", Value = "Yes"}
-        };
+        public IUnitOfWork _uow;
+
+        public AppSettingsController(IUnitOfWork uow) {
+            _uow = uow;
+        }
 
         [HttpGet("")]
         public IActionResult GetAllSettings() {
-            return Ok(settings.Select(s => s.ToDto()));
+            return Ok(_uow.AppSettingsRepository.FindAll().Select(s => s.ToDto()));
         }
 
         [HttpGet("{key}")]
@@ -20,7 +22,7 @@ namespace webapi.Controllers {
                 return BadRequest();
             }
 
-            var result = settings.Where(s => s.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+            var result = _uow.AppSettingsRepository.GetByKey(key);
             
             if (result == null) {
                 return NotFound();
