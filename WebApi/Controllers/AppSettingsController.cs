@@ -68,14 +68,15 @@ namespace webapi.Controllers {
                     return NotFound();
                 }
 
-                var patchVm = setting.ToUpdateDto();
-                patchDoc.ApplyTo(patchVm, ModelState);
+                // This line is required because we do not get updateDto directly from request body
+                var updateDto = setting.ToUpdateDto();
+                patchDoc.ApplyTo(updateDto, ModelState);
 
                 if (!ModelState.IsValid) {
                     return BadRequest();
                 }
 
-                patchVm.ApplyTo(setting);
+                updateDto.ApplyTo(setting);
                 await _uow.CompleteAsync();
                 return NoContent();
             }
