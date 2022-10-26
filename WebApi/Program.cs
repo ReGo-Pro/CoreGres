@@ -9,6 +9,8 @@ builder.Services.AddControllers()
                 .AddNewtonsoftJson();  // This replaces the default System.Text.Json-based input and output
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddLogging();
+// TODO: Add NLog
 
 var dbConnex = builder.Configuration.GetConnectionString("AppDbConnex");
 builder.Services.AddDbContext<AppDbContext>(opt => {

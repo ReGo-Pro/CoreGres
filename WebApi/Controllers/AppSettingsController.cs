@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Controllers {
     public class AppSettingsController : ApiController {
-        public IUnitOfWork _uow;
+        private IUnitOfWork _uow;
+        private ILogger _logger;
 
-        public AppSettingsController(IUnitOfWork uow) {
+        public AppSettingsController(ILogger<AppSettingsController> logger, IUnitOfWork uow) {
             _uow = uow;
+            _logger = logger;
         }
 
         [HttpGet("")]
@@ -18,7 +20,7 @@ namespace webapi.Controllers {
                 return Ok((await _uow.AppSettingsRepository.FindAllAsync()).Select(s => s.ToDto()));
             }
             catch (Exception e) {
-                // TODO: Log exception
+                _logger.LogCritical(e.Message, e);
                 return InternalServerError();
             }
         }
@@ -53,7 +55,7 @@ namespace webapi.Controllers {
                 return await savePostedSetting(dto);
             }
             catch (Exception e) {
-                // TODO: log exception
+                _logger.LogCritical(e.Message, e);
                 return InternalServerError();
             }
         }
@@ -78,7 +80,7 @@ namespace webapi.Controllers {
                 return NoContent();
             }
             catch (Exception e) {
-                // TODO: log the exception
+                _logger.LogCritical(e.Message, e);
                 return InternalServerError();
             } 
         }
