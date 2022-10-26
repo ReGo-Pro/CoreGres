@@ -1,10 +1,12 @@
 using data;
 using data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using webapi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddNewtonsoftJson();  // This replaces the default System.Text.Json-based input and output
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

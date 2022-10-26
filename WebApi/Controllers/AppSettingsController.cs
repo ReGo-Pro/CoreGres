@@ -1,8 +1,8 @@
 ﻿using data.Interfaces;
-using Domain.Core;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Mappers;
 using webapi.ViewModels.AppSettings;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Controllers {
     public class AppSettingsController : ApiController {
@@ -56,6 +56,25 @@ namespace webapi.Controllers {
                 // TODO: log exception
                 return InternalServerError();
             }
+        }
+
+        [HttpPatch("{key}")]
+        public async Task<IActionResult> PartiallyUpdateAppSetting(string key, [FromBody] JsonPatchDocument<AppSettingUpdateViewModel> patchDoc) {
+            var setting = await _uow.AppSettingsRepository.GetByKeyAsync(key);
+            if (setting == null) {
+                return NotFound();
+            }
+
+            var patchVm = setting.ToUpdateDto();
+            patchDoc.ApplyTo(patchVm, ModelState);
+
+            if (!ModelState.IsValid) {
+                return BadRequest();
+            }
+
+            patchVm.ApplyTo(setting);
+            await _uow.CompleteAsync();
+            return NoContent();
         }
 
         private async Task<IActionResult> savePostedSetting(AppSettingCreationViewModel dto) {

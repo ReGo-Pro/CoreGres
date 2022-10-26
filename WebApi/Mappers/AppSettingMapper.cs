@@ -13,12 +13,22 @@ namespace webapi.Mappers {
             };
         }
 
+        public static AppSettingUpdateViewModel ToUpdateDto(this AppSetting model) {
+            return new AppSettingUpdateViewModel() {
+                Value = model.Value
+            };
+        }
+
         public static AppSetting ToModel(this AppSettingCreationViewModel dto) {
             return new AppSetting()
             {
                 Key = dto.Key,
                 Value = dto.Value
             };
+        }
+
+        public static void ApplyTo(this AppSettingUpdateViewModel dto, AppSetting model) {
+            model.Value = dto.Value;
         }
     }
 }
