@@ -69,7 +69,7 @@ namespace webapi.Controllers {
                 }
 
                 // This line is required because we do not get updateDto directly from request body
-                var updateDto = setting.ToUpdateDto();
+                var updateDto = new AppSettingUpdateViewModel();
                 patchDoc.ApplyTo(updateDto, ModelState);
 
                 if (!ModelState.IsValid) {
