@@ -76,6 +76,10 @@ namespace webapi.Controllers {
                     return BadRequest();
                 }
 
+                if (!TryValidateModel(updateDto)) {
+                    return BadRequest();
+                }
+
                 updateDto.ApplyTo(setting);
                 await _uow.CompleteAsync();
                 return NoContent();
