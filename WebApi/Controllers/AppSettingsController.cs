@@ -60,21 +60,27 @@ namespace webapi.Controllers {
 
         [HttpPatch("{key}")]
         public async Task<IActionResult> PartiallyUpdateAppSetting(string key, [FromBody] JsonPatchDocument<AppSettingUpdateViewModel> patchDoc) {
-            var setting = await _uow.AppSettingsRepository.GetByKeyAsync(key);
-            if (setting == null) {
-                return NotFound();
+            try {
+                var setting = await _uow.AppSettingsRepository.GetByKeyAsync(key);
+                if (setting == null) {
+                    return NotFound();
+                }
+
+                var patchVm = setting.ToUpdateDto();
+                patchDoc.ApplyTo(patchVm, ModelState);
+
+                if (!ModelState.IsValid) {
+                    return BadRequest();
+                }
+
+                patchVm.ApplyTo(setting);
+                await _uow.CompleteAsync();
+                return NoContent();
             }
-
-            var patchVm = setting.ToUpdateDto();
-            patchDoc.ApplyTo(patchVm, ModelState);
-
-            if (!ModelState.IsValid) {
-                return BadRequest();
-            }
-
-            patchVm.ApplyTo(setting);
-            await _uow.CompleteAsync();
-            return NoContent();
+            catch (Exception e) {
+                // TODO: log the exception
+                return InternalServerError();
+            } 
         }
 
         private async Task<IActionResult> savePostedSetting(AppSettingCreationViewModel dto) {
