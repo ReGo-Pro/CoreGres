@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   database:
     image: postgres
@@ -7,6 +8,8 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=CoreGresDb
+    volumes:
+      - app_data:/var/lib/postgresql/data
 
   backend:
     build: .
@@ -16,3 +19,5 @@ services:
     depends_on:
       - database
     command: ["./wait-for-postgres.sh", "database", "dotnet", "WebApp.dll"]
+volumes:
+  app_data:
