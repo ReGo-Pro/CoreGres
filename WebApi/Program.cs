@@ -14,7 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(opt => {
 });
 await AppDbContext.ApplyMigrationsAsync(dbConnex);
 
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
