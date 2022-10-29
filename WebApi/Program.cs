@@ -1,7 +1,6 @@
 using data;
-using data.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using webapi;
+using WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +12,10 @@ builder.Services.AddLogging();
 // TODO: Add NLog
 
 var dbConnex = builder.Configuration.GetConnectionString("AppDbConnex");
-builder.Services.AddDbContext<AppDbContext>(opt => {
-    opt.UseNpgsql(dbConnex);
-});
+builder.Services.AddPostgreSQL(dbConnex);
 await AppDbContext.ApplyMigrationsAsync(dbConnex);
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddUnitOfWork();
 
 var app = builder.Build();
 
