@@ -15,5 +15,9 @@ namespace data {
         public async Task CompleteAsync() {
             await _context.SaveChangesAsync();
         }
+
+        public void Dispose() {
+            _context?.Dispose();
+        }
     }
 }
