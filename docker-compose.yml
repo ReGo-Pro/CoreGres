@@ -1,23 +1,41 @@
-version: '3.8'
+version: '3.4'
+
 services:
   database:
     image: postgres
     ports:
-      - 5432:5432
+    - 5432:5432
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=CoreGresDb
+      - POSTGRES_DB=CoreGres
     volumes:
       - app_data:/var/lib/postgresql/data
 
+  migrator:
+    image: ${DOCKER_REGISTRY-}dbmigrator
+    build:
+      context: .
+      dockerfile: DbMigrator/Dockerfile
+    depends_on:
+      - database
+    environment: 
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=CoreGres
+    command: ["DbMigrator/wait-for-postgres.sh", "database", "dotnet", "WebApp.dll"]
+
   backend:
-    build: .
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
     ports:
       - 8080:80
       - 8081:443
     depends_on:
-      - database
-    command: ["./wait-for-postgres.sh", "database", "dotnet", "WebApp.dll"]
+      - migrator
+    
 volumes:
   app_data:
